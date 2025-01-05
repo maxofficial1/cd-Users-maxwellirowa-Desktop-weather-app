@@ -6,7 +6,7 @@ document.getElementById('city-input').addEventListener('keydown', function (e) {
 });
 
 function fetchWeather() {
-    const cityInput = document.getElementById('city-input').value;
+    const cityInput = document.getElementById('get-weather-btn').addEventListener('click', fetchWeather);
     const weatherApiKey = 'f716f862a52b41808bd514356664bfa3'; // Your OpenWeather API key
     const searchApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${weatherApiKey}&units=imperial`;
 
