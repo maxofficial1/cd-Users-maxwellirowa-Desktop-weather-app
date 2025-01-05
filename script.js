@@ -5,21 +5,22 @@ document.getElementById('get-weather-btn').addEventListener('click', function ()
 
     // Fetch weather data from OpenWeather
     fetch(searchApiUrl)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('City not found.');
+            }
+            return response.json();
+        })
         .then(data => {
             document.getElementById('city-list').innerHTML = '';
 
-            if (data.name && data.main.temp) {
-                const cityList = document.getElementById('city-list');
-                const listItem = document.createElement('li');
-                listItem.textContent = `${data.name}, ${data.sys.country} - ${data.weather[0].description}, ${data.main.temp}°F`;
-                cityList.appendChild(listItem);
-            } else {
-                alert('City not found. Please try again.');
-            }
+            const cityList = document.getElementById('city-list');
+            const listItem = document.createElement('li');
+            listItem.textContent = `${data.name}, ${data.sys.country} - ${data.weather[0].description}, ${data.main.temp}°F`;
+            cityList.appendChild(listItem);
         })
         .catch(error => {
             console.error('Error fetching weather data:', error);
-            alert('An error occurred while fetching the weather data.');
+            alert(error.message);
         });
 });
