@@ -15,9 +15,10 @@ document.getElementById('get-weather-btn').addEventListener('click', function() 
                 fetch(weatherApiUrl)
                     .then(response => response.json())
                     .then(weatherData => {
+                        const state = getState(city.name, city.sys.country); // Get the state based on city name and country
                         const cityList = document.getElementById('city-list');
                         const listItem = document.createElement('li');
-                        listItem.textContent = `${city.name}, ${city.sys.country} - ${weatherData.weather[0].description}, ${Math.round(weatherData.main.temp - 273.15)}°C`;
+                        listItem.textContent = `${city.name}, ${state}, ${city.sys.country} - ${weatherData.weather[0].description}, ${Math.round(weatherData.main.temp - 273.15)}°C`;
                         cityList.appendChild(listItem);
                     })
                     .catch(error => console.error('Error fetching weather data for city:', error));
@@ -25,3 +26,20 @@ document.getElementById('get-weather-btn').addEventListener('click', function() 
         })
         .catch(error => console.error('Error fetching city data:', error));
 });
+
+function getState(cityName, country) {
+    // Predefined list of cities and states (this is just a sample, you'll need to expand it as needed)
+    const cities = {
+        'Duluth': {
+            'US': 'Minnesota',
+            'GA': 'Georgia'
+        }
+        // Add more cities and states here
+    };
+
+    if (cities[cityName] && cities[cityName][country]) {
+        return cities[cityName][country];
+    } else {
+        return 'Unknown State';
+    }
+}
