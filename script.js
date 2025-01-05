@@ -20,8 +20,8 @@ function fetchWeather() {
         })
         .then(data => {
             document.getElementById('city-list').innerHTML = '';
-           const rapidApiKey = 'ef6f72f9e9mshb2c18ba8120bce1p178b8cjsn982659f1cd45'; // Your RapidAPI key
-            const geoDbApiUrl = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${data.name}&countryIds=${data.sys.country}`;
+           const rapidApiKey = 'a0896f271amsh7ca12bb74dd82abp11edd9jsn10b601892cf9'; // Your RapidAPI key
+            const geoDbApiUrl = 'wft-geo-db.p.rapidapi.com';
 
             // Fetch state data from RapidAPI
             fetch(geoDbApiUrl, {
