@@ -22,12 +22,9 @@ function displayWeather(data) {
     const temperature = document.getElementById('temperature');
     const weatherDescription = document.getElementById('weather-description');
 
-    const tempFahrenheit = data.main.temp;
-    const tempCelsius = (tempFahrenheit - 32) * 5 / 9;
-
     cityName.innerText = `Weather in ${data.name}`;
-    temperature.innerHTML = `Temperature: ${tempFahrenheit.toFixed(2)}°F / ${tempCelsius.toFixed(2)}°C`;
-    weatherDescription.innerText = `Weather: ${data.weather[0].description}`;
+    temperature.innerText = `Temperature: ${data.main.temp.toFixed(1)}°F`;
+    weatherDescription.innerText = `Weather: ${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}`;
 }
 
 // Event listener for the Get Weather button
@@ -37,5 +34,12 @@ document.getElementById('get-weather-btn').addEventListener('click', () => {
         getWeather(city);
     } else {
         alert('Please enter a city name.');
+    }
+});
+
+// ✅ Event listener for pressing the Enter key
+document.getElementById('city-input').addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        document.getElementById('get-weather-btn').click();
     }
 });
