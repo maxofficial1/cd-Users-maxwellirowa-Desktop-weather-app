@@ -4,6 +4,7 @@ async function getWeather(city) {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
     try {
+        // Using the Fetch API to get weather data
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error('City not found');
@@ -29,6 +30,6 @@ function displayWeather(data) {
 
 // Event listener for the Get Weather button
 document.getElementById('get-weather-btn').addEventListener('click', () => {
-    const city = document.getElementById('city-input').value;
-    getWeather(city);
-});
+    const city = document.getElementById('city-input').value.trim();
+    if (city) {
+  
