@@ -1,45 +1,42 @@
-// Function to fetch weather data
-async function getWeather(city) {
-    const apiKey = 'f716f862a52b41808bd514356664bfa3'; // Your OpenWeather API key
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+document.getElementById('get-weather-btn').addEventListener('click', function() {
+    const cityInput = document.getElementById('city-input').value;
+    const apiKey = 'YOUR_API_KEY'; // Replace with your weather API key
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${apiKey}`;
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('City not found');
-        }
-        const data = await response.json();
-        displayWeather(data);
-    } catch (error) {
-        console.error('Error fetching weather data:', error);
-        alert('Error fetching weather data: ' + error.message);
-    }
-}
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Display the weather information for the first matching city
+            document.getElementById('city-name').textContent = data.name;
+            document.getElementById('temperature').textContent = `Temperature: ${Math.round(data.main.temp - 273.15)}°C`;
+            document.getElementById('weather-description').textContent = `Weather: ${data.weather[0].description}`;
 
-// Function to display weather data
-function displayWeather(data) {
-    const cityName = document.getElementById('city-name');
-    const temperature = document.getElementById('temperature');
-    const weatherDescription = document.getElementById('weather-description');
+            // Clear the existing city list
+            document.getElementById('city-list').innerHTML = '';
 
-    cityName.innerText = `Weather in ${data.name}`;
-    temperature.innerText = `Temperature: ${data.main.temp.toFixed(1)}°F`;
-    weatherDescription.innerText = `Weather: ${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}`;
-}
-
-// Event listener for the Get Weather button
-document.getElementById('get-weather-btn').addEventListener('click', () => {
-    const city = document.getElementById('city-input').value.trim();
-    if (city) {
-        getWeather(city);
-    } else {
-        alert('Please enter a city name.');
-    }
+            // Fetch and display all matching cities with the same name
+            displayMatchingCities(cityInput, data.weather[0].main);
+        })
+        .catch(error => console.error('Error fetching weather data:', error));
 });
 
-// ✅ Event listener for pressing the Enter key
-document.getElementById('city-input').addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
-        document.getElementById('get-weather-btn').click();
-    }
-});
+function displayMatchingCities(cityName, weatherCondition) {
+    const cities = ['Duluth, US', 'Duluth, MN', 'Duluth, GA']; // Example cities list
+    const apiKey = 'YOUR_API_KEY'; // Replace with your weather API key
+
+    cities.forEach(city => {
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.weather[0].main === weatherCondition && data.name.toLowerCase() === cityName.toLowerCase()) {
+                    const cityList = document.getElementById('city-list');
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${data.name}, ${data.sys.country} - ${data.weather[0].description}, ${Math.round(data.main.temp - 273.15)}°C`;
+                    cityList.appendChild(listItem);
+                }
+            })
+            .catch(error => console.error('Error fetching weather data for city:', error));
+    });
+}
