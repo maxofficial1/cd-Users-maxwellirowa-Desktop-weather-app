@@ -11,7 +11,7 @@ document.getElementById('get-weather-btn').addEventListener('click', function() 
 
             data.list.forEach(city => {
                 const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${city.coord.lat}&lon=${city.coord.lon}&appid=${weatherApiKey}`;
-                
+
                 fetch(weatherApiUrl)
                     .then(response => response.json())
                     .then(weatherData => {
