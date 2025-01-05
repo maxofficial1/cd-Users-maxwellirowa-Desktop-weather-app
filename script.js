@@ -8,7 +8,7 @@ document.getElementById('city-input').addEventListener('keydown', function (e) {
 function fetchWeather() {
     const cityInput = document.getElementById('city-input').value;
     const weatherApiKey = 'f716f862a52b41808bd514356664bfa3'; // Your OpenWeather API key
-    const searchApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${weatherApiKey}&units=imperial`;
+    const searchApiUrl = 'wft-geo-db.p.rapidapi.com'
 
     // Fetch weather data from OpenWeather
     fetch(searchApiUrl)
@@ -20,8 +20,7 @@ function fetchWeather() {
         })
         .then(data => {
             document.getElementById('city-list').innerHTML = '';
-
-            const rapidApiKey = 'ef6f72f9e9mshb2c18ba8120bce1p178b8cjsn982659f1cd45'; // Your RapidAPI key
+           const rapidApiKey = 'ef6f72f9e9mshb2c18ba8120bce1p178b8cjsn982659f1cd45'; // Your RapidAPI key
             const geoDbApiUrl = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${data.name}&countryIds=${data.sys.country}`;
 
             // Fetch state data from RapidAPI
