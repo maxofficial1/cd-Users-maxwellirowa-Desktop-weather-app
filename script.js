@@ -18,7 +18,8 @@ document.getElementById('get-weather-btn').addEventListener('click', function() 
                         getState(city.name, city.sys.country).then(state => {
                             const cityList = document.getElementById('city-list');
                             const listItem = document.createElement('li');
-                            listItem.textContent = `${city.name}, ${state}, ${city.sys.country} - ${weatherData.weather[0].description}, ${Math.round(weatherData.main.temp - 273.15)}°C`;
+                            const tempFahrenheit = Math.round((weatherData.main.temp - 273.15) * 9/5 + 32); // Convert to Fahrenheit
+                            listItem.textContent = `${city.name}, ${state}, ${city.sys.country} - ${weatherData.weather[0].description}, ${tempFahrenheit}°F`;
                             cityList.appendChild(listItem);
                         }).catch(error => console.error('Error fetching state data for city:', error));
                     })
