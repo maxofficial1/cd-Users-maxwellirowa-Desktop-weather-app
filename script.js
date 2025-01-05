@@ -1,7 +1,7 @@
 // Function to fetch weather data
 async function getWeather(city) {
     const apiKey = 'f716f862a52b41808bd514356664bfa3'; // Your OpenWeather API key
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
 
     try {
         const response = await fetch(url);
@@ -23,9 +23,10 @@ function displayWeather(data) {
     const weatherDescription = document.getElementById('weather-description');
 
     cityName.innerText = `Weather in ${data.name}`;
-    temperature.innerText = `Temperature: ${data.main.temp}°C`;
+    temperature.innerText = `Temperature: ${data.main.temp}°F`;
     weatherDescription.innerText = `Weather: ${data.weather[0].description}`;
 }
+
 
 // Event listener for the Get Weather button
 document.getElementById('get-weather-btn').addEventListener('click', () => {
