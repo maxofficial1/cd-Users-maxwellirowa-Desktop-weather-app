@@ -8,8 +8,8 @@ document.getElementById('get-weather-btn').addEventListener('click', function ()
     fetch(searchApiUrl, {
         method: 'GET',
         headers: {
-            'x-rapidapi-host': apiHost,
-            'x-rapidapi-key': apiKey
+            'X-RapidAPI-Host': apiHost,
+            'X-RapidAPI-Key': apiKey
         }
     })
         .then(response => response.json())
