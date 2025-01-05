@@ -5,12 +5,28 @@ async function getWeather(city) {
 
     try {
         const response = await fetch(url);
+
+        // Check if the response is not ok (e.g., 404 error for city not found)
         if (!response.ok) {
-            throw new Error('City not found');
+            if (response.status === 404) {
+                throw new Error('City not found. Please check the city name.');
+            } else {
+                throw new Error('Unable to fetch weather data. Please try again later.');
+            }
         }
+
         const data = await response.json();
+
+        // Check if the API returns valid data
+        if (!data || !data.main || !data.weather) {
+            throw new Error('Incomplete weather data received from API.');
+        }
+
+        // Display the weather data
         displayWeather(data);
+
     } catch (error) {
+        // Log the error and display an alert to the user
         console.error('Error fetching weather data:', error);
         alert('Error fetching weather data: ' + error.message);
     }
@@ -22,15 +38,16 @@ function displayWeather(data) {
     const temperature = document.getElementById('temperature');
     const weatherDescription = document.getElementById('weather-description');
 
+    // Update the HTML elements with the weather data
     cityName.innerText = `Weather in ${data.name}`;
-    temperature.innerText = `Temperature: ${data.main.temp}°F`;
-    weatherDescription.innerText = `Weather: ${data.weather[0].description}`;
+    temperature.innerText = `Temperature: ${data.main.temp.toFixed(1)}°F`;
+    weatherDescription.innerText = `Weather: ${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}`;
 }
-
 
 // Event listener for the Get Weather button
 document.getElementById('get-weather-btn').addEventListener('click', () => {
     const city = document.getElementById('city-input').value.trim();
+
     if (city) {
         getWeather(city);
     } else {
