@@ -21,36 +21,10 @@ function fetchWeather() {
         .then(data => {
             document.getElementById('city-list').innerHTML = '';
 
-            const rapidApiKey = 'ef6f72f9e9mshb2c18ba8120bce1p178b8cjsn982659f1cd45'; // Your RapidAPI key
-            const geoDbApiUrl = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${data.name}&countryIds=${data.sys.country}`;
-
-            // Fetch state data from RapidAPI
-            fetch(geoDbApiUrl, {
-                method: 'GET',
-                headers: {
-                    'X-RapidAPI-Key': rapidApiKey,
-                    'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-                }
-            })
-                .then(response => response.json())
-                .then(geoData => {
-                    if (geoData.data && geoData.data.length > 0) {
-                        geoData.data.forEach(city => {
-                            if (city.latitude === data.coord.lat && city.longitude === data.coord.lon) {
-                                const cityList = document.getElementById('city-list');
-                                const listItem = document.createElement('li');
-                                listItem.textContent = `${city.city}, ${city.region}, ${city.country} - ${data.weather[0].description}, ${data.main.temp}°F`;
-                                cityList.appendChild(listItem);
-                            }
-                        });
-                    } else {
-                        alert('State not found.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching state data:', error);
-                    alert(error.message);
-                });
+            const cityList = document.getElementById('city-list');
+            const listItem = document.createElement('li');
+            listItem.textContent = `${data.name}, ${data.sys.country} - ${data.weather[0].description}, ${data.main.temp}°F`;
+            cityList.appendChild(listItem);
         })
         .catch(error => {
             console.error('Error fetching weather data:', error);
