@@ -1,8 +1,6 @@
-// script.js
-
 // Function to fetch weather data
 async function getWeather(city) {
-    const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+    const apiKey = 'f716f862a52b41808bd514356664bfa3'; // Your OpenWeather API key
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
     try {
@@ -11,7 +9,7 @@ async function getWeather(city) {
             throw new Error('City not found');
         }
         const data = await response.json();
-        return data;
+        displayWeather(data);
     } catch (error) {
         console.error('Error fetching weather data:', error);
         alert('Error fetching weather data: ' + error.message);
@@ -20,29 +18,17 @@ async function getWeather(city) {
 
 // Function to display weather data
 function displayWeather(data) {
-    const weatherContainer = document.getElementById('weather');
-    weatherContainer.innerHTML = `
-        <h2>Weather in ${data.name}</h2>
-        <p>Temperature: ${data.main.temp}°C</p>
-        <p>Weather: ${data.weather[0].description}</p>
-        <p>Humidity: ${data.main.humidity}%</p>
-        <p>Wind Speed: ${data.wind.speed} m/s</p>
-    `;
+    const cityName = document.getElementById('city-name');
+    const temperature = document.getElementById('temperature');
+    const weatherDescription = document.getElementById('weather-description');
+
+    cityName.innerText = `Weather in ${data.name}`;
+    temperature.innerText = `Temperature: ${data.main.temp}°C`;
+    weatherDescription.innerText = `Weather: ${data.weather[0].description}`;
 }
 
-// Event listener for form submission
-document.getElementById('weatherForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const city = document.getElementById('city').value;
+// Event listener for the Get Weather button
+document.getElementById('get-weather-btn').addEventListener('click', () => {
+    const city = document.getElementById('city-input').value;
     getWeather(city);
 });
-const citiesInGeorgia = ['Atlanta', 'Savannah', 'Augusta', 'Columbus', 'Macon', 'Athens', 'Sandy Springs', 'Roswell', 'Albany', 'Johns Creek'];
-
-async function getWeatherForAllCities() {
-    const weatherPromises = citiesInGeorgia.map(city => getWeather(city));
-    const weatherData = await Promise.all(weatherPromises);
-    weatherData.forEach(data => displayWeather(data));
-}
-
-// Call the function to get weather for all cities in Georgia
-getWeatherForAllCities();
