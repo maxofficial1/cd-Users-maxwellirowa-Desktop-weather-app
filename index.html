@@ -1,37 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Weather App</h1>
+// Function to fetch matching cities using the Geocoding API
+async function getCities(city) {
+    const apiKey = 'f716f862a52b41808bd514356664bfa3'; // Your OpenWeather API key
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apiKey}`;
 
-        <!-- Input field and button to get weather -->
-        <input type="text" id="city-input" placeholder="Enter city name">
-        <button id="get-weather-btn">Get Weather</button>
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('City not found. Please enter a valid city name.');
+        }
+        const cities = await response.json();
 
-        <!-- Section to display the weather information -->
-        <div id="weather-info">
-            <h2 id="city-name"></h2>
-            <p id="temperature"></p>
-            <p id="weather-description"></p>
-        </div>
+        if (cities.length === 0) {
+            alert('No matching cities found.');
+            return;
+        }
 
-        <!-- GitHub Repository Link -->
-        <footer>
-            <p>View the code on GitHub: 
-                <a href="https://github.com/maxofficial1/cd-Users-maxwellirowa-Desktop-weather-app" target="_blank">
-                    GitHub Repository
-                </a>
-            </p>
-        </footer>
-    </div>
+        displayCities(cities);
+    } catch (error) {
+        console.error('Error fetching city data:', error);
+        alert('Error: ' + error.message);
+    }
+}
 
-    <!-- Link to your JavaScript file -->
-    <script src="script.js"></script>
-</body>
-</html>
+// Function to display matching cities for user selection
+function displayCities(cities) {
+    const cityList = document.getElementById('city-list');
+    cityList.innerHTML = ''; // Clear previous results
+
+    cities.forEach((city, index) => {
+        const listItem = document.createElement('li');
+        listItem.innerText = `${city.name}, ${city.state || ''}, ${city.country}`;
+        listItem.addEventListener('click', () => getWeather(city.lat, city.lon));
+        cityList.appendChild(listItem);
+    });
+}
+
+// Function to fetch weather data for the selected city
+async function getWeather(lat, lon) {
+    const apiKey = 'f716f862a52b41808bd514356664bfa3'; // Your OpenWeather API key
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Weather data not found.');
+        }
+        const data = await response.json();
+        displayWeather(data);
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        alert('Error fetching weather data: ' + error.message);
+    }
+}
+
+// Function to display weather data
+function displayWeather(data) {
+    const cityName = document.getElementById('city-name');
+    const temperature = document.getElementById('temperature');
+    const weatherDescription = document.getElementById('weather-description');
+
+    cityName.innerText = `Weather in ${data.name}`;
+    temperature.innerText = `Temperature: ${data.main.temp.toFixed(1)}°F`;
+    weatherDescription.innerText = `Weather: ${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}`;
+}
+
+// Event listener for the Enter key or button click
+document.getElementById('get-weather-btn').addEventListener('click', () => {
+    const city = document.getElementById('city-input').value.trim();
+    if (city) {
+        getCities(city);
+    } else {
+        alert('Please enter a city name.');
+    }
+});
+
+document.getElementById('city-input').addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        const city = document.getElementById('city-input').value.trim();
+        if (city) {
+            getCities(city);
+        }
+    }
+});
