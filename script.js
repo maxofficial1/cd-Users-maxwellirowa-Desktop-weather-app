@@ -29,7 +29,7 @@ document.getElementById('get-weather-btn').addEventListener('click', function() 
 });
 
 function getState(cityName, country) {
-    const geoDbApiKey = 'YOUR_GEODB_API_KEY';
+    const geoDbApiKey = '7a881ed1-e246-40c7-83d1-f4c656e7bb6';
     const geoDbApiUrl = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${cityName}&countryIds=${country}&limit=1`;
 
     return fetch(geoDbApiUrl, {
